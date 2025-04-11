@@ -17,7 +17,7 @@ public class PdfDocument extends Document {
     }
 
     @Override
-    protected DocumentMemento createMemento() {
+    public DocumentMemento createMemento() {
         return new PdfDocumentMemento(content);
     }
 
