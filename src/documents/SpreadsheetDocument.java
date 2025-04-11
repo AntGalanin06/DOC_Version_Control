@@ -22,7 +22,7 @@ public class SpreadsheetDocument extends Document {
     }
 
     @Override
-    protected void restoreFromMemento(DocumentMemento memento) {
+    public void restoreFromMemento(DocumentMemento memento) {
         if(memento instanceof SpreadsheetDocumentMemento) {
             this.content = ((SpreadsheetDocumentMemento)memento).getText();
         }
