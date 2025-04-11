@@ -17,7 +17,7 @@ public class SpreadsheetDocument extends Document {
     }
 
     @Override
-    protected DocumentMemento createMemento() {
+    public DocumentMemento createMemento() {
         return new SpreadsheetDocumentMemento(content);
     }
 
