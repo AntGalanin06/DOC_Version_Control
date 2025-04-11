@@ -6,5 +6,5 @@ public abstract class Document {
     public abstract String getContent();
     public abstract void setContent(String content);
     protected abstract DocumentMemento createMemento();
-    protected abstract void restoreFromMemento(DocumentMemento memento);
+    public abstract void restoreFromMemento(DocumentMemento memento);
 }

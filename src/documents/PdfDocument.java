@@ -22,7 +22,7 @@ public class PdfDocument extends Document {
     }
 
     @Override
-    protected void restoreFromMemento(DocumentMemento memento) {
+    public void restoreFromMemento(DocumentMemento memento) {
         if(memento instanceof PdfDocumentMemento) {
             this.content = ((PdfDocumentMemento)memento).getText();
         }
