@@ -17,7 +17,7 @@ public class TextDocument extends Document {
     }
 
     @Override
-    protected DocumentMemento createMemento() {
+    public DocumentMemento createMemento() {
         return new TextDocumentMemento(content);
     }
 
