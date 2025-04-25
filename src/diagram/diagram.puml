@@ -1,0 +1,253 @@
+@startuml
+' Settings
+skinparam classAttributeIconSize 0
+hide empty members
+left to right direction
+
+' Packages
+package main {
+    class Main {
+        {static} + main(String[] args)
+    }
+    class DocumentEditorGUI extends JFrame implements observer.DocumentObserver {
+        - textArea: JTextArea
+        - logArea: JTextArea
+        - historyModel: DefaultListModel<String>
+        - undoBtn: JButton
+        - redoBtn: JButton
+        - document: documents.Document
+        - logger: memento.DocumentHistoryLogger
+        + DocumentEditorGUI()
+        - init()
+        - buildUI(String kind)
+        - editContent()
+        - jumpToHistory(int index)
+        - saveHistoryToFile()
+        - loadHistoryFromFile()
+        - refresh()
+        + update(Document d)
+    }
+}
+
+package documents {
+    abstract class Document {
+        # historyLogger: memento.DocumentHistoryLogger
+        - observers: List<observer.DocumentObserver>
+        + {abstract} getContent(): String
+        + {abstract} setContent(String content)
+        + {abstract} createMemento(): memento.DocumentMemento
+        + {abstract} restoreFromMemento(memento.DocumentMemento memento)
+        + setHistoryLogger(memento.DocumentHistoryLogger logger)
+        + addObserver(observer.DocumentObserver observer)
+        + removeObserver(observer.DocumentObserver observer)
+        # notifyObservers()
+    }
+    class TextDocument extends Document {
+        - content: String
+        + getContent(): String
+        + setContent(String content)
+        + createMemento(): memento.DocumentMemento
+        + restoreFromMemento(memento.DocumentMemento memento)
+    }
+    class PdfDocument extends Document {
+        - content: String
+        + getContent(): String
+        + setContent(String content)
+        + createMemento(): memento.DocumentMemento
+        + restoreFromMemento(memento.DocumentMemento memento)
+    }
+    class SpreadsheetDocument extends Document {
+        - content: String
+        + getContent(): String
+        + setContent(String content)
+        + createMemento(): memento.DocumentMemento
+        + restoreFromMemento(memento.DocumentMemento memento)
+    }
+}
+
+package factory {
+    interface DocumentFactory <<interface>> {
+        + createDocument(): documents.Document
+    }
+    class TextDocumentFactory implements DocumentFactory {
+        + createDocument(): documents.Document
+    }
+    class PdfDocumentFactory implements DocumentFactory {
+        + createDocument(): documents.Document
+    }
+    class SpreadsheetDocumentFactory implements DocumentFactory {
+        + createDocument(): documents.Document
+    }
+}
+
+package decorators {
+    abstract class DocumentDecorator extends documents.Document {
+        # document: documents.Document
+        + DocumentDecorator(documents.Document document)
+        + getContent(): String
+        + setContent(String content)
+        + createMemento(): memento.DocumentMemento
+        + restoreFromMemento(memento.DocumentMemento memento)
+        + addObserver(observer.DocumentObserver observer)
+        + removeObserver(observer.DocumentObserver observer)
+    }
+    class EncryptionDocumentDecorator extends DocumentDecorator {
+        + EncryptionDocumentDecorator(documents.Document document)
+        + setContent(String content)
+        + getContent(): String
+        - encrypt(String input): String
+        - decrypt(String input): String
+    }
+    class LoggingDocumentDecorator extends DocumentDecorator {
+        + LoggingDocumentDecorator(documents.Document document)
+        + getContent(): String
+        + setContent(String content)
+        + createMemento(): memento.DocumentMemento
+        + restoreFromMemento(memento.DocumentMemento memento)
+        + addObserver(observer.DocumentObserver observer)
+        + removeObserver(observer.DocumentObserver observer)
+    }
+}
+
+package commands {
+    interface DocumentCommand <<interface>> {
+        + execute()
+        + undo()
+    }
+    class ChangeTextCommand implements DocumentCommand {
+        - document: documents.Document
+        - newText: String
+        - previousText: String
+        + ChangeTextCommand(documents.Document document, String newText)
+        + execute()
+        + undo()
+    }
+    class UndoCommand implements DocumentCommand {
+        ' Assuming similar structure to Redo/Revert
+        - document: documents.Document
+        - historyLogger: memento.DocumentHistoryLogger
+        + UndoCommand(documents.Document document, memento.DocumentHistoryLogger historyLogger)
+        + execute()
+        + undo() ' May not be applicable or needed for simple Undo
+    }
+    class RedoCommand implements DocumentCommand {
+        - document: documents.Document
+        - historyLogger: memento.DocumentHistoryLogger
+        + RedoCommand(documents.Document document, memento.DocumentHistoryLogger historyLogger)
+        + execute()
+        + undo() ' May not be applicable or needed for simple Redo
+    }
+     class RevertCommand implements DocumentCommand {
+        - document: documents.Document
+        - historyLogger: memento.DocumentHistoryLogger
+        - savedCurrent: memento.DocumentMemento
+        + RevertCommand(documents.Document document, memento.DocumentHistoryLogger historyLogger)
+        + execute()
+        + undo()
+    }
+}
+
+package memento {
+    interface DocumentMemento <<interface>> extends Serializable {
+        + getState(): Map<String, Object>
+    }
+    class GenericDocumentMemento implements DocumentMemento {
+        ' Assuming implementation based on usage
+        - state: Map<String, Object>
+        + GenericDocumentMemento(Map<String, Object> state)
+        + getState(): Map<String, Object>
+    }
+    class DocumentHistoryLogger {
+        ' Assuming fields based on usage
+        - history: List<DocumentMemento>
+        - redoStack: List<DocumentMemento>
+        + addMemento(DocumentMemento memento)
+        + undo(DocumentMemento current): DocumentMemento
+        + redo(): DocumentMemento
+        + getMementoAt(int index): DocumentMemento
+        + getHistory(): List<DocumentMemento>
+        + canUndo(): boolean
+        + canRedo(): boolean
+        + clearRedo()
+        + saveHistoryToFile(File file)
+        + loadHistoryFromFile(File file)
+    }
+}
+
+package observer {
+    interface DocumentObserver <<interface>> {
+        + update(documents.Document d)
+    }
+    class ConsoleLoggerObserver implements DocumentObserver {
+        ' Assuming implementation based on usage
+        + update(documents.Document d)
+    }
+}
+
+package logger {
+    class LogCollector <<singleton>> {
+        - INSTANCE: LogCollector
+        - logs: List<String>
+        - LogCollector()
+        + {static} getInstance(): LogCollector
+        + add(String message)
+        + getLogs(): List<String>
+    }
+}
+
+' Relationships
+main.Main ..> main.DocumentEditorGUI : creates
+
+main.DocumentEditorGUI o--> documents.Document : uses/aggregates
+main.DocumentEditorGUI o--> memento.DocumentHistoryLogger : uses/aggregates
+main.DocumentEditorGUI ..> factory.DocumentFactory : uses
+main.DocumentEditorGUI ..> commands.DocumentCommand : creates/uses
+main.DocumentEditorGUI ..> decorators.DocumentDecorator : uses/wraps
+main.DocumentEditorGUI ..> logger.LogCollector : uses
+main.DocumentEditorGUI ..> observer.ConsoleLoggerObserver : uses/creates
+main.DocumentEditorGUI ..> memento.DocumentMemento : uses
+
+factory.DocumentFactory <|.. factory.TextDocumentFactory
+factory.DocumentFactory <|.. factory.PdfDocumentFactory
+factory.DocumentFactory <|.. factory.SpreadsheetDocumentFactory
+
+documents.Document <|-- documents.TextDocument
+documents.Document <|-- documents.PdfDocument
+documents.Document <|-- documents.SpreadsheetDocument
+documents.Document <|-- decorators.DocumentDecorator
+
+documents.Document "1" *--> "0..*" observer.DocumentObserver : observes >
+documents.Document ..> memento.DocumentMemento : creates/restores
+documents.Document o--> memento.DocumentHistoryLogger : uses
+
+documents.TextDocument ..> memento.GenericDocumentMemento : creates
+documents.PdfDocument ..> memento.GenericDocumentMemento : creates
+documents.SpreadsheetDocument ..> memento.GenericDocumentMemento : creates
+
+decorators.DocumentDecorator <|-- decorators.EncryptionDocumentDecorator
+decorators.DocumentDecorator <|-- decorators.LoggingDocumentDecorator
+decorators.DocumentDecorator o--> documents.Document : wraps
+
+decorators.LoggingDocumentDecorator ..> logger.LogCollector : uses
+
+commands.DocumentCommand <|.. commands.ChangeTextCommand
+commands.DocumentCommand <|.. commands.UndoCommand
+commands.DocumentCommand <|.. commands.RedoCommand
+commands.DocumentCommand <|.. commands.RevertCommand
+
+commands.ChangeTextCommand ..> documents.Document : modifies
+commands.UndoCommand ..> documents.Document : modifies
+commands.UndoCommand ..> memento.DocumentHistoryLogger : uses
+commands.RedoCommand ..> documents.Document : modifies
+commands.RedoCommand ..> memento.DocumentHistoryLogger : uses
+commands.RevertCommand ..> documents.Document : modifies
+commands.RevertCommand ..> memento.DocumentHistoryLogger : uses
+commands.RevertCommand ..> memento.DocumentMemento : uses
+
+memento.DocumentMemento <|.. memento.GenericDocumentMemento
+memento.DocumentHistoryLogger o--> "*" memento.DocumentMemento : stores
+
+observer.DocumentObserver <|.. main.DocumentEditorGUI
+observer.DocumentObserver <|.. observer.ConsoleLoggerObserver
+
+@enduml
