@@ -5,7 +5,7 @@ import documents.SpreadsheetDocument;
 
 public class SpreadsheetDocumentFactory implements DocumentFactory {
     @Override
-    public Document createDocument(String type) {
+    public Document createDocument() {
         return new SpreadsheetDocument();
     }
 }

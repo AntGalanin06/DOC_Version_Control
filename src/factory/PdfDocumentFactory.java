@@ -5,7 +5,7 @@ import documents.PdfDocument;
 
 public class PdfDocumentFactory implements DocumentFactory {
     @Override
-    public Document createDocument(String type) {
+    public Document createDocument() {
         return new PdfDocument();
     }
 }
