@@ -5,9 +5,10 @@ import memento.DocumentHistoryLogger;
 import memento.DocumentMemento;
 
 public class RevertCommand implements DocumentCommand {
-    private Document document;
-    private DocumentHistoryLogger historyLogger;
-    private DocumentMemento revertedState;
+
+    private final Document document;
+    private final DocumentHistoryLogger historyLogger;
+    private DocumentMemento savedCurrent;
 
     public RevertCommand(Document document, DocumentHistoryLogger historyLogger) {
         this.document = document;
@@ -16,14 +17,17 @@ public class RevertCommand implements DocumentCommand {
 
     @Override
     public void execute() {
-        revertedState = historyLogger.undo();
-        if(revertedState != null) {
-            document.restoreFromMemento(revertedState);
-        }
+        savedCurrent = document.createMemento();
+        DocumentMemento target = historyLogger.undo(savedCurrent);
+        if (target != null) document.restoreFromMemento(target);
     }
 
     @Override
     public void undo() {
-        // Реализация отката операции отката, если требуется
+        if (savedCurrent == null) return;
+        DocumentMemento back = document.createMemento();
+        historyLogger.addMemento(back);
+        document.restoreFromMemento(savedCurrent);
+        savedCurrent = null;
     }
 }

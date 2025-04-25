@@ -1,6 +1,7 @@
 package decorators;
 
 import documents.Document;
+import memento.DocumentMemento;
 
 public class EncryptionDocumentDecorator extends DocumentDecorator {
 
@@ -21,10 +22,14 @@ public class EncryptionDocumentDecorator extends DocumentDecorator {
     }
 
     private String encrypt(String input) {
+        if (input == null) return null;
+        System.out.println("EncryptionDecorator: Шифрование данных...");
         return new StringBuilder(input).reverse().toString();
     }
 
     private String decrypt(String input) {
+        if (input == null) return null;
+        System.out.println("EncryptionDecorator: Дешифрование данных...");
         return new StringBuilder(input).reverse().toString();
     }
 }
