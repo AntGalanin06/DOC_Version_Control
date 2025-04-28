@@ -1,13 +1,13 @@
 package commands;
 
-import documents.TextDocument;
+import documents.Document;
 
 public class ChangeTextCommand implements DocumentCommand {
-    private TextDocument document;
+    private Document document;
     private String newText;
     private String previousText;
 
-    public ChangeTextCommand(TextDocument document, String newText) {
+    public ChangeTextCommand(Document document, String newText) {
         this.document = document;
         this.newText = newText;
     }

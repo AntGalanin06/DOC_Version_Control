@@ -1,11 +1,8 @@
 package memento;
 
-public abstract class DocumentMemento {
-    private final String type;
-    protected DocumentMemento(String type) {
-        this.type = type;
-    }
-    public String getType() {
-        return type;
-    }
+import java.io.Serializable;
+import java.util.Map;
+
+public interface DocumentMemento extends Serializable {
+    Map<String, Object> getState();
 }
