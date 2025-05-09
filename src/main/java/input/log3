@@ -1,0 +1,138 @@
+[14:41:11.981] [INFO] [DOCUMENT] [→] CALL DocumentFactory.getName()
+[14:41:11.982] [INFO] [DOCUMENT] [→] RET  DocumentFactory.getName()
+[14:41:11.982] [INFO] [DOCUMENT] [→] CALL DocumentFactory.getName()
+[14:41:11.982] [INFO] [DOCUMENT] [→] RET  DocumentFactory.getName()
+[14:41:11.982] [INFO] [DOCUMENT] [→] CALL DocumentFactory.getName()
+[14:41:11.982] [INFO] [DOCUMENT] [→] RET  DocumentFactory.getName()
+[14:41:14.032] [INFO] [DOCUMENT] [→] CALL DocumentFactory.getName()
+[14:41:14.032] [INFO] [DOCUMENT] [→] RET  DocumentFactory.getName()
+[14:41:14.072] [INFO] [DOCUMENT] [→] CALL Document.setHistoryLogger(..)
+[14:41:14.072] [INFO] [DOCUMENT] [→] RET  Document.setHistoryLogger(..)
+[14:41:14.072] [INFO] [DOCUMENT] [→] CALL Document.setHistoryLogger(..)
+[14:41:14.072] [INFO] [DOCUMENT] [→] RET  Document.setHistoryLogger(..)
+[14:41:14.072] [DEBUG] [DOCUMENT] [→] Document.addObserver(..)
+[14:41:14.074] [DEBUG] [DOCUMENT] [←] Document.addObserver(..) Time: 1ms
+[14:41:14.074] [DEBUG] [DOCUMENT] [→] Document.addObserver(..)
+[14:41:14.074] [DEBUG] [DOCUMENT] [←] Document.addObserver(..) Time: 0ms
+[14:41:14.779] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:14.780] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 1ms
+[14:41:14.826] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:14.826] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: []
+[14:41:16.050] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:16.050] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: []
+[14:41:19.397] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:19.398] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 1ms Result: []
+[14:41:19.400] [INFO] [DOCUMENT] [→] PdfDocument.setContent(..) Args: [11]
+[14:41:19.402] [INFO] [DOCUMENT] [←] PdfDocument.setContent(..) Args: [11] Time: 2ms
+[14:41:19.402] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:19.402] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:19.403] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:19.403] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [11]
+[14:41:20.496] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:20.496] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [11]
+[14:41:25.045] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:25.046] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [11]
+[14:41:25.046] [INFO] [DOCUMENT] [→] PdfDocument.setContent(..) Args: [222 11]
+[14:41:25.046] [INFO] [DOCUMENT] [←] PdfDocument.setContent(..) Args: [222 11] Time: 0ms
+[14:41:25.046] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:25.046] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:25.047] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:25.047] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [222 11]
+[14:41:26.511] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:26.512] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 1ms Result: [222 11]
+[14:41:30.100] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:30.100] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [222 11]
+[14:41:30.100] [INFO] [DOCUMENT] [→] PdfDocument.setContent(..) Args: [333 222 11]
+[14:41:30.100] [INFO] [DOCUMENT] [←] PdfDocument.setContent(..) Args: [333 222 11] Time: 0ms
+[14:41:30.100] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:30.100] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:30.101] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:30.101] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [333 222 11]
+[14:41:32.650] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:32.650] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:32.650] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:41:32.651] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:41:32.651] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:32.651] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [222 11]
+[14:41:33.019] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:33.019] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:33.019] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:41:33.019] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:41:33.020] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:33.020] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [11]
+[14:41:34.244] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:34.245] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:34.245] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:41:34.245] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:41:34.246] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:34.246] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: []
+[14:41:35.046] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:35.046] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:35.046] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:41:35.046] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:41:35.047] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:35.047] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [11]
+[14:41:35.270] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:35.271] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:35.271] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:41:35.272] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 1ms
+[14:41:35.272] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:35.272] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [222 11]
+[14:41:35.501] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:35.501] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:35.501] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:41:35.502] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 1ms
+[14:41:35.503] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:35.503] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [333 222 11]
+[14:41:37.964] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:41:37.964] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:41:37.964] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:41:37.965] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 1ms
+[14:41:37.965] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:41:37.965] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [11]
+[14:42:39.220] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:42:39.220] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:42:39.220] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:42:39.220] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:42:39.221] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:42:39.221] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [333 222 11]
+[14:42:39.531] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:42:39.532] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 1ms
+[14:42:39.532] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:42:39.532] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:42:39.532] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:42:39.532] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [222 11]
+[14:42:40.750] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:42:40.750] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:42:40.750] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:42:40.751] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 1ms
+[14:42:40.751] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:42:40.751] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [11]
+[14:42:41.262] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:42:41.262] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:42:41.263] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:42:41.263] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:42:41.264] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:42:41.264] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: []
+[14:42:43.777] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:42:43.777] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:42:43.777] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:42:43.777] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:42:43.778] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:42:43.778] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [11]
+[14:42:44.161] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:42:44.161] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:42:44.161] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:42:44.161] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:42:44.162] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:42:44.162] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [222 11]
+[14:42:44.433] [DEBUG] [DOCUMENT] [→] Document.createMemento()
+[14:42:44.433] [DEBUG] [DOCUMENT] [←] Document.createMemento() Time: 0ms
+[14:42:44.433] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:42:44.434] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 1ms
+[14:42:44.434] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:42:44.434] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [333 222 11]
+[14:43:42.121] [DEBUG] [DOCUMENT] [→] Document.restoreFromMemento(..)
+[14:43:42.122] [DEBUG] [DOCUMENT] [←] Document.restoreFromMemento(..) Time: 0ms
+[14:43:42.122] [INFO] [DOCUMENT] [→] PdfDocument.getContent()
+[14:43:42.123] [INFO] [DOCUMENT] [←] PdfDocument.getContent() Time: 0ms Result: [333 222 11]

@@ -1,0 +1,267 @@
+@startuml
+' Settings
+skinparam classAttributeIconSize 0
+hide empty members
+left to right direction
+
+' Packages
+package main {
+    class Main {
+        + {static} main(String[] args)
+    }
+    class AppConfig {
+        + <<@Configuration>>
+        + <<@ComponentScan("ru.doc")>>
+        + <<@EnableAspectJAutoProxy>>
+    }
+    class DocumentEditorGUI extends JFrame implements DocumentObserver {
+        - factories: List<DocumentFactory>
+        - logCollector: LogCollector
+        - textArea: JTextArea
+        - document: Document
+        - logger: DocumentHistoryLogger
+        + initialize()
+        + update(Document document)
+        - editContent()
+        - jumpToHistory(int index)
+        - refresh()
+        - refreshLogs()
+    }
+}
+
+package documents {
+    abstract class Document {
+        - content: String
+        - historyLogger: DocumentHistoryLogger
+        - observers: List<DocumentObserver>
+        + getContent(): String
+        + setContent(String content)
+        + createMemento(): DocumentMemento
+        + restoreFromMemento(DocumentMemento memento)
+        + addObserver(DocumentObserver observer)
+        + removeObserver(DocumentObserver observer)
+        # notifyObservers()
+    }
+    class TextDocument extends Document {
+        + getContent(): String
+        + setContent(String content)
+    }
+    class PdfDocument extends Document {
+        + getContent(): String
+        + setContent(String content)
+    }
+    class SpreadsheetDocument extends Document {
+        + getContent(): String
+        + setContent(String content)
+    }
+}
+
+package factory {
+    interface DocumentFactory <<interface>> {
+        + createDocument(): Document
+        + getName(): String
+    }
+    class TextDocumentFactory implements DocumentFactory {
+        - textProvider: ObjectProvider<TextDocument>
+        - historyProvider: ObjectProvider<DocumentHistoryLogger>
+        + createDocument(): Document
+        + getName(): String
+    }
+    class PdfDocumentFactory implements DocumentFactory {
+        - pdfProvider: ObjectProvider<PdfDocument>
+        - historyProvider: ObjectProvider<DocumentHistoryLogger>
+        + createDocument(): Document
+        + getName(): String
+    }
+    class SpreadsheetDocumentFactory implements DocumentFactory {
+        - sheetProvider: ObjectProvider<SpreadsheetDocument>
+        - historyProvider: ObjectProvider<DocumentHistoryLogger>
+        + createDocument(): Document
+        + getName(): String
+    }
+}
+
+package decorators {
+    abstract class DocumentDecorator extends Document {
+        # document: Document
+        + DocumentDecorator(Document document)
+        + getContent(): String
+        + setContent(String content)
+        + createMemento(): DocumentMemento
+        + restoreFromMemento(DocumentMemento memento)
+        + addObserver(DocumentObserver observer)
+        + removeObserver(DocumentObserver observer)
+    }
+    class EncryptionDocumentDecorator extends DocumentDecorator {
+        + setContent(String content)
+        + getContent(): String
+        - encrypt(String input): String
+        - decrypt(String input): String
+    }
+}
+
+package commands {
+    interface DocumentCommand <<interface>> {
+        + execute()
+        + undo()
+    }
+    class ChangeTextCommand implements DocumentCommand {
+        - document: Document
+        - newText: String
+        - previousText: String
+        + ChangeTextCommand(Document document, String newText)
+        + execute()
+        + undo()
+    }
+    class UndoCommand implements DocumentCommand {
+        - document: Document
+        - logger: DocumentHistoryLogger
+        + UndoCommand(Document document, DocumentHistoryLogger logger)
+        + execute()
+        + undo()
+    }
+    class RedoCommand implements DocumentCommand {
+        - document: Document
+        - logger: DocumentHistoryLogger
+        + RedoCommand(Document document, DocumentHistoryLogger logger)
+        + execute()
+        + undo()
+    }
+    class RevertCommand implements DocumentCommand {
+        - document: Document
+        - historyLogger: DocumentHistoryLogger
+        - targetIndex: int
+        - savedCurrent: DocumentMemento
+        + RevertCommand(Document document, DocumentHistoryLogger historyLogger, int targetIndex)
+        + execute()
+        + undo()
+    }
+}
+
+package memento {
+    interface DocumentMemento <<interface>> {
+        + getState(): Map<String, Object>
+    }
+    class GenericDocumentMemento implements DocumentMemento {
+        - state: Map<String, Object>
+        + GenericDocumentMemento(Map<String, Object> state)
+        + getState(): Map<String, Object>
+    }
+    class DocumentHistoryLogger {
+        - undoStack: Stack<DocumentMemento>
+        - redoStack: Stack<DocumentMemento>
+        + addMemento(DocumentMemento memento)
+        + canUndo(): boolean
+        + canRedo(): boolean
+        + undo(DocumentMemento current): DocumentMemento
+        + redo(DocumentMemento current): DocumentMemento
+        + getHistory(): List<DocumentMemento>
+        + getMementoAt(int index): DocumentMemento
+        + clearRedo()
+        + saveHistoryToFile(File file)
+        + loadHistoryFromFile(File file)
+    }
+}
+
+package observer {
+    interface DocumentObserver <<interface>> {
+        + update(Document document)
+    }
+    class ConsoleLoggerObserver implements DocumentObserver {
+        + update(Document document)
+    }
+}
+
+package logging {
+    class LogCollector {
+        - records: List<String>
+        + add(Level level, Category category, OperationType type, String msg)
+        + add(Level level, String msg)
+        + getRecordsByCategory(Category category): List<String>
+        + getRecordsByCategoryAndLevel(Category category, Level level): List<String>
+        + getRecords(): List<String>
+        + getRecordsByLevel(Level level): List<String>
+        + clear()
+    }
+    enum Level {
+        INFO
+        DEBUG
+        ERROR
+    }
+    enum Category {
+        DOCUMENT
+        HISTORY
+        FACTORY
+        DECORATOR
+        UI
+    }
+    enum OperationType {
+        CALL("→")
+        RETURN("←")
+        ERROR("⚠")
+    }
+    annotation Loggable {
+        + category(): Category
+        + level(): Level
+        + withArgs(): boolean
+        + withResult(): boolean
+        + withTime(): boolean
+        + description(): String
+    }
+    class LoggingAspect {
+        - logCollector: LogCollector
+        + aroundLoggableMethod(ProceedingJoinPoint pjp): Object
+        + trace(ProceedingJoinPoint pjp): Object
+    }
+}
+
+' Relationships
+Main ..> AppConfig : uses
+Main ..> DocumentEditorGUI : creates
+
+DocumentEditorGUI o--> Document : manages
+DocumentEditorGUI o--> DocumentHistoryLogger : uses
+DocumentEditorGUI ..> DocumentFactory : uses
+DocumentEditorGUI ..> DocumentCommand : creates
+DocumentEditorGUI ..> ConsoleLoggerObserver : creates
+DocumentEditorGUI ..> LogCollector : uses
+
+Document <|-- TextDocument
+Document <|-- PdfDocument
+Document <|-- SpreadsheetDocument
+Document <|-- DocumentDecorator
+
+Document ..> DocumentMemento : creates
+Document o--> DocumentHistoryLogger : uses
+Document "1" *--> "0..*" DocumentObserver : observes
+
+DocumentDecorator o--> Document : wraps
+DocumentDecorator <|-- EncryptionDocumentDecorator
+
+DocumentFactory <|.. TextDocumentFactory
+DocumentFactory <|.. PdfDocumentFactory
+DocumentFactory <|.. SpreadsheetDocumentFactory
+
+DocumentCommand <|.. ChangeTextCommand
+DocumentCommand <|.. UndoCommand
+DocumentCommand <|.. RedoCommand
+DocumentCommand <|.. RevertCommand
+
+ChangeTextCommand ..> Document : modifies
+UndoCommand ..> Document : modifies
+UndoCommand ..> DocumentHistoryLogger : uses
+RedoCommand ..> Document : modifies
+RedoCommand ..> DocumentHistoryLogger : uses
+RevertCommand ..> Document : modifies
+RevertCommand ..> DocumentHistoryLogger : uses
+RevertCommand ..> DocumentMemento : uses
+
+DocumentMemento <|.. GenericDocumentMemento
+DocumentHistoryLogger o--> "0..*" DocumentMemento : stores
+
+DocumentObserver <|.. DocumentEditorGUI
+DocumentObserver <|.. ConsoleLoggerObserver
+
+LoggingAspect ..> LogCollector : uses
+LoggingAspect ..> Loggable : reads
+@enduml
