@@ -1,0 +1,234 @@
+@startuml
+' Settings
+skinparam classAttributeIconSize 0
+hide empty members
+left to right direction
+
+' Packages
+package concurrency.client {
+    class ClientConfig {
+        - id: int
+        - allowedTypes: RequestType[]
+        - baseDelayMs: long
+        - jitterMs: long
+        - burst: int
+    }
+
+    class ClientConfigFactory <<utility>> {
+        - ClientConfigFactory()
+        + {static} random(id: int): ClientConfig
+    }
+
+    class ClientGenerator implements Runnable {
+        - id: int
+        - cfg: ClientConfig
+        - q: RequestQueue
+        - agg: StatsAggregator
+        - remaining: int
+        - run: volatile boolean
+        - lastSent: long
+        + ClientGenerator(id, cfg, quota, q, agg)
+        + stop()
+        + run()
+        - pick(rnd: ThreadLocalRandom): RequestType
+    }
+}
+
+package concurrency.model {
+    class Request {
+        - id: long
+        - type: RequestType
+        - content: String
+        - createdAt: long
+        + Request(type, content)
+        + getId(): long
+        + getType(): RequestType
+        + getContent(): String
+        + getCreatedAt(): long
+        + equals(Object o): boolean
+        + hashCode(): int
+    }
+
+    enum RequestType {
+        CHANGE_TEXT
+        UNDO
+        REDO
+        REVERT
+        SHUTDOWN
+    }
+}
+
+package concurrency.queue {
+    class RequestQueue {
+        - queue: BlockingQueue<Request>
+        - agg: StatsAggregator
+        + RequestQueue(capacity, agg)
+        + put(r: Request)
+        + offer(r: Request, timeout, unit): boolean
+        + take(): Request
+        + size(): int
+        - recordEnqueue(r: Request)
+    }
+}
+
+package concurrency.monitor {
+    class StatsAggregator {
+        - capacity: int
+        - queueSize: volatile int
+        - clients: ConcurrentMap<Integer, ClientStat>
+        - workers: ConcurrentMap<Integer, WorkerStat>
+        - allRequests: List<Request>
+        - queued: ConcurrentMap<Long, Request>
+        - producedTotal: AtomicLong
+        - consumedTotal: AtomicLong
+        + StatsAggregator(capacity)
+        + setQueueSize(size)
+        + capacity(): int
+        + queueSize(): int
+        + incProducedTotal()
+        + incConsumedTotal()
+        + producedTotal(): long
+        + consumedTotal(): long
+        + client(id): ClientStat
+        + worker(id): WorkerStat
+        + enqueue(r: Request)
+        + dequeue(r: Request)
+        + allRequests(): List<Request>
+        + queuedRequests(): List<Request>
+        + clientRows(): List<Object[]>
+        + workerRows(): List<Object[]>
+    }
+
+    class ClientStat {
+        - produced: AtomicLong
+        - totalDelay: AtomicLong
+        - requests: AtomicLong
+        + incProduced()
+        + addDelay(d: long)
+        + produced(): long
+        + avgDelay(): double
+    }
+
+    class WorkerStat {
+        - consumed: AtomicLong
+        - busyUntil: AtomicLong
+        + markBusy()
+        + incConsumed()
+        + consumed(): long
+        + isBusy(): boolean
+    }
+}
+
+package concurrency.server {
+    class Worker implements Runnable {
+        - id: int
+        - q: RequestQueue
+        - doc: Document
+        - hist: DocumentHistoryLogger
+        - agg: StatsAggregator
+        + Worker(id, q, doc, h, a)
+        + run()
+    }
+
+    class WorkerPool {
+        - exec: ExecutorService
+        - list: List<Worker>
+        + WorkerPool(size, q, d, h, a)
+        + shutdownGracefully()
+        + size(): int
+    }
+}
+
+package concurrency.engine {
+    class ConcurrencyEngine {
+        - agg: StatsAggregator
+        - queue: RequestQueue
+        - workers: WorkerPool
+        - gens: List<ClientGenerator>
+        - genThreads: List<Thread>
+        + ConcurrencyEngine(clients, wcnt, cap, total, doc, hist)
+        + stats(): StatsAggregator
+        + shutdown()
+    }
+}
+
+package gui {
+    class QueueDashboard {
+        - agg: StatsAggregator
+        - bar: JProgressBar
+        - clientM: DefaultTableModel
+        - workerM: DefaultTableModel
+        - allM: DefaultListModel<String>
+        + QueueDashboard(agg: StatsAggregator)
+        - refresh()
+        - rebuild(m: DefaultTableModel, rows: List<Object[]>)
+        - fill(m: DefaultListModel<String>, rs: List<Request>)
+    }
+
+    class SystemMonitorGUI extends JFrame {
+        - engine: ConcurrencyEngine
+        + SystemMonitorGUI(c, w, cap, total)
+    }
+}
+
+package core.commands {
+    interface DocumentCommand <<interface>> {
+        + execute()
+        + undo()
+    }
+
+    class ChangeTextCommand implements DocumentCommand
+    class UndoCommand implements DocumentCommand
+    class RedoCommand implements DocumentCommand
+    class RevertCommand implements DocumentCommand
+}
+
+package core.documents {
+    abstract class Document
+}
+
+package core.memento {
+    class DocumentHistoryLogger
+}
+
+' Relationships
+concurrency.client.ClientGenerator --> concurrency.client.ClientConfig : uses
+concurrency.client.ClientGenerator --> concurrency.queue.RequestQueue : adds requests to
+concurrency.client.ClientGenerator --> concurrency.monitor.StatsAggregator : reports to
+concurrency.client.ClientGenerator --> concurrency.model.Request : creates
+concurrency.client.ClientGenerator --> concurrency.model.RequestType : uses
+
+concurrency.queue.RequestQueue o--> concurrency.monitor.StatsAggregator : reports to
+concurrency.queue.RequestQueue o--> "many" concurrency.model.Request : contains
+
+concurrency.server.Worker --> concurrency.queue.RequestQueue : consumes from
+concurrency.server.Worker --> core.documents.Document : modifies
+concurrency.server.Worker --> core.memento.DocumentHistoryLogger : uses
+concurrency.server.Worker --> concurrency.monitor.StatsAggregator : reports to
+concurrency.server.Worker --> concurrency.model.RequestType : checks
+concurrency.server.Worker ..> core.commands.DocumentCommand : creates/executes
+
+concurrency.server.WorkerPool o--> "*" concurrency.server.Worker : manages
+concurrency.server.WorkerPool --> concurrency.queue.RequestQueue : passes to workers
+concurrency.server.WorkerPool --> core.documents.Document : passes to workers
+concurrency.server.WorkerPool --> core.memento.DocumentHistoryLogger : passes to workers
+concurrency.server.WorkerPool --> concurrency.monitor.StatsAggregator : passes to workers
+
+concurrency.engine.ConcurrencyEngine --> concurrency.monitor.StatsAggregator : aggregates
+concurrency.engine.ConcurrencyEngine --> concurrency.queue.RequestQueue : creates/manages
+concurrency.engine.ConcurrencyEngine --> concurrency.server.WorkerPool : creates/manages
+concurrency.engine.ConcurrencyEngine o--> "*" concurrency.client.ClientGenerator : creates/manages
+concurrency.engine.ConcurrencyEngine --> core.documents.Document : passes to components
+concurrency.engine.ConcurrencyEngine --> core.memento.DocumentHistoryLogger : passes to components
+
+concurrency.monitor.StatsAggregator o--> "*" concurrency.monitor.ClientStat : contains
+concurrency.monitor.StatsAggregator o--> "*" concurrency.monitor.WorkerStat : contains
+concurrency.monitor.StatsAggregator o--> "*" concurrency.model.Request : tracks
+
+gui.SystemMonitorGUI o--> concurrency.engine.ConcurrencyEngine : uses
+gui.SystemMonitorGUI ..> gui.QueueDashboard : creates
+
+gui.QueueDashboard --> concurrency.monitor.StatsAggregator : monitors
+gui.QueueDashboard ..> concurrency.model.Request : displays
+
+@enduml
