@@ -3,11 +3,11 @@ package ru.doc.aop;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import ru.doc.logging.LogCollector;
 import ru.doc.logging.Loggable;
+
 import java.lang.reflect.Method;
 
 @Aspect
@@ -20,16 +20,7 @@ public class LoggingAspect {
         this.logCollector = logCollector;
     }
 
-    @Pointcut("execution(* ru.doc.document..*(..)) || execution(* ru.doc.factory..*(..)) || execution(* ru.doc.commands..*(..))")
-    public void applicationPointcut() {}
-
-    @Pointcut("@annotation(ru.doc.logging.Loggable)")
-    public void loggableMethod() {}
-
-    @Pointcut("@within(ru.doc.logging.Loggable)")
-    public void loggableClass() {}
-
-    @Around("loggableMethod() || loggableClass()")
+    @Around("@annotation(ru.doc.logging.Loggable) || @within(ru.doc.logging.Loggable)")
     public Object aroundLoggableMethod(ProceedingJoinPoint pjp) throws Throwable {
         MethodSignature signature = (MethodSignature) pjp.getSignature();
         Method method = signature.getMethod();
@@ -56,67 +47,32 @@ public class LoggingAspect {
             StringBuilder args = new StringBuilder();
             boolean first = true;
             for (Object arg : pjp.getArgs()) {
-                if (!first) {
-                    args.append(", ");
-                }
+                if (!first) args.append(", ");
                 first = false;
-                try {
-                    args.append(arg != null ? arg.toString() : "null");
-                } catch (Exception e) {
-                    args.append("[Error getting argument]");
-                }
+                args.append(arg != null ? arg.toString() : "null");
             }
-            message += " Args: [" + args + "]";
+            message += " args=[" + args + "]";
         }
 
         logCollector.add(level, category, LogCollector.OperationType.CALL, message);
-        long startTime = System.currentTimeMillis();
 
+        long start = System.nanoTime();
         try {
             Object result = pjp.proceed();
-            long elapsedTime = System.currentTimeMillis() - startTime;
-
-            String returnMessage = message;
-            if (withTime) {
-                returnMessage += " Time: " + elapsedTime + "ms";
-            }
-
             if (withResult && result != null) {
-                try {
-                    returnMessage += " Result: [" + result + "]";
-                } catch (Exception e) {
-                    returnMessage += " Result: [Error getting result]";
-                }
+                message += " result=" + result;
             }
-
-            logCollector.add(level, category, LogCollector.OperationType.RETURN, returnMessage);
             return result;
-
-        } catch (Throwable ex) {
-            long elapsedTime = System.currentTimeMillis() - startTime;
-            String errorMessage = message + " Exception: " + ex.getClass().getSimpleName();
-
+        } catch (Throwable t) {
+            logCollector.add(LogCollector.Level.ERROR, category, LogCollector.OperationType.ERROR,
+                    message + " error=" + t.getMessage());
+            throw t;
+        } finally {
+            long elapsed = System.nanoTime() - start;
             if (withTime) {
-                errorMessage += " Time: " + elapsedTime + "ms";
+                message += " time=" + elapsed / 1_000_000 + "ms";
             }
-
-            logCollector.add(LogCollector.Level.ERROR, category, LogCollector.OperationType.ERROR, errorMessage);
-            throw ex;
-        }
-    }
-
-    @Around("applicationPointcut() && !(loggableMethod() || loggableClass())")
-    public Object trace(ProceedingJoinPoint pjp) throws Throwable {
-        String sig = pjp.getSignature().toShortString();
-        logCollector.add(LogCollector.Level.INFO, "CALL " + sig);
-
-        try {
-            Object res = pjp.proceed();
-            logCollector.add(LogCollector.Level.INFO, "RET  " + sig);
-            return res;
-        } catch (Throwable ex) {
-            logCollector.add(LogCollector.Level.ERROR, "THRW " + sig + " " + ex.getClass().getSimpleName());
-            throw ex;
+            logCollector.add(level, category, LogCollector.OperationType.RETURN, message);
         }
     }
 }

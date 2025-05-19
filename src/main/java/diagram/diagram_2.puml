@@ -62,19 +62,16 @@ package factory {
         + getName(): String
     }
     class TextDocumentFactory implements DocumentFactory {
-        - textProvider: ObjectProvider<TextDocument>
         - historyProvider: ObjectProvider<DocumentHistoryLogger>
         + createDocument(): Document
         + getName(): String
     }
     class PdfDocumentFactory implements DocumentFactory {
-        - pdfProvider: ObjectProvider<PdfDocument>
         - historyProvider: ObjectProvider<DocumentHistoryLogger>
         + createDocument(): Document
         + getName(): String
     }
     class SpreadsheetDocumentFactory implements DocumentFactory {
-        - sheetProvider: ObjectProvider<SpreadsheetDocument>
         - historyProvider: ObjectProvider<DocumentHistoryLogger>
         + createDocument(): Document
         + getName(): String
@@ -95,8 +92,8 @@ package decorators {
     class EncryptionDocumentDecorator extends DocumentDecorator {
         + setContent(String content)
         + getContent(): String
-        - encrypt(String input): String
-        - decrypt(String input): String
+        + encrypt(String input): String
+        + decrypt(String input): String
     }
 }
 

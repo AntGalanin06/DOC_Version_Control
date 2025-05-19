@@ -14,10 +14,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("ch.qos.logback:logback-classic:1.5.3")
 
-    //Версии пакетов Spring должны совпадать, поэтому версию лучше вынести в отдельную переменную
     val springVersion = "6.2.6"
 
-    //зависимости для работы со Spring в рамках ЛР
     implementation("org.springframework:spring-context:6.2.6")
     implementation("org.springframework:spring-core:${springVersion}")
     implementation("org.springframework:spring-beans:${springVersion}")
@@ -25,7 +23,6 @@ dependencies {
     implementation("org.springframework:spring-aop:${springVersion}")
 
     implementation("jakarta.annotation:jakarta.annotation-api:3.0.0")
-
 
     implementation("org.aspectj:aspectjrt:1.9.22")
     implementation("org.aspectj:aspectjweaver:1.9.22")

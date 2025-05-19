@@ -11,20 +11,18 @@ import ru.doc.logging.LogCollector;
 
 @Component
 public class PdfDocumentFactory implements DocumentFactory {
-    private final ObjectProvider<PdfDocument> pdfProvider;
+
     private final ObjectProvider<DocumentHistoryLogger> historyProvider;
 
     @Autowired
-    public PdfDocumentFactory(ObjectProvider<PdfDocument> pdfProvider,
-                              ObjectProvider<DocumentHistoryLogger> historyProvider) {
-        this.pdfProvider = pdfProvider;
+    public PdfDocumentFactory(ObjectProvider<DocumentHistoryLogger> historyProvider) {
         this.historyProvider = historyProvider;
     }
 
     @Loggable(category = LogCollector.Category.FACTORY, withResult = true, description = "Document creation")
     @Override
     public Document createDocument() {
-        PdfDocument doc = pdfProvider.getObject();
+        PdfDocument doc = new PdfDocument();
         doc.setHistoryLogger(historyProvider.getObject());
         return doc;
     }

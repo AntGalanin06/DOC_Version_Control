@@ -11,20 +11,18 @@ import ru.doc.logging.LogCollector;
 
 @Component
 public class SpreadsheetDocumentFactory implements DocumentFactory {
-    private final ObjectProvider<SpreadsheetDocument> sheetProvider;
+
     private final ObjectProvider<DocumentHistoryLogger> historyProvider;
 
     @Autowired
-    public SpreadsheetDocumentFactory(ObjectProvider<SpreadsheetDocument> sheetProvider,
-                                      ObjectProvider<DocumentHistoryLogger> historyProvider) {
-        this.sheetProvider = sheetProvider;
+    public SpreadsheetDocumentFactory(ObjectProvider<DocumentHistoryLogger> historyProvider) {
         this.historyProvider = historyProvider;
     }
 
     @Loggable(category = LogCollector.Category.FACTORY, withResult = true, description = "Document creation")
     @Override
     public Document createDocument() {
-        SpreadsheetDocument doc = sheetProvider.getObject();
+        SpreadsheetDocument doc = new SpreadsheetDocument();
         doc.setHistoryLogger(historyProvider.getObject());
         return doc;
     }
