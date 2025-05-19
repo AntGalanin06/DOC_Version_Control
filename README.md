@@ -17,7 +17,7 @@
 5. Автоматическое обновление интерфейса и консоли (Observer)
 
 👉 [Релиз ЛР 1 → v1-lab-patterns](https://github.com/AntGalanin06/DOC_Version_Control/releases/tag/v1-lab-patterns)  
-📥 [Скачать отчёт ЛР 1 (DOCX)](https://github.com/AntGalanin06/DOC_Version_Control/blob/master/docs/ЛР_1.docx)
+📥 [Скачать отчёт ЛР 1 (DOCX)](https://github.com/AntGalanin06/DOC_Version_Control/raw/master/docs/ЛР_1.docx)
 
 ---
 
@@ -39,7 +39,7 @@
    — создаётся и закрывается в `main()`, остальной код работает через DI
 
 👉 [Релиз ЛР 2 → v2-lab-spring](https://github.com/AntGalanin06/DOC_Version_Control/releases/tag/v2-lab-spring)  
-📥 [Скачать отчёт ЛР 2 (DOCX)](https://github.com/AntGalanin06/DOC_Version_Control/blob/master/docs/ЛР_2.docx)
+📥 [Скачать отчёт ЛР 2 (DOCX)](https://github.com/AntGalanin06/DOC_Version_Control/raw/master/docs/ЛР_2.docx)
 
 ---
 
@@ -57,7 +57,7 @@
 7. **Graceful shutdown** — poison-pill `SHUTDOWN`, остановка потоков
 
 👉 [Релиз ЛР 3 → v3-lab-multithreading](https://github.com/AntGalanin06/DOC_Version_Control/releases/tag/v3-lab-multithreading)  
-📥 [Скачать отчёт ЛР 3 (DOCX)](https://github.com/AntGalanin06/DOC_Version_Control/blob/master/docs/ЛР_3.docx)
+📥 [Скачать отчёт ЛР 3 (DOCX)](https://github.com/AntGalanin06/DOC_Version_Control/raw/master/docs/ЛР_3.docx)
 
 ---
 
