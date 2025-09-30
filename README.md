@@ -58,14 +58,3 @@
 
 👉 [Релиз ЛР 3 → v3-lab-multithreading](https://github.com/AntGalanin06/DOC_Version_Control/releases/tag/v3-lab-multithreading)  
 📥 [Скачать отчёт ЛР 3 (DOCX)](https://github.com/AntGalanin06/DOC_Version_Control/raw/master/docs/ЛР_3.docx)
-
----
-
----
-
-### ℹ️ Контакты
-
-Связаться со мной можно через Telegram или по электронной почте:
-
-[![Telegram](https://img.shields.io/badge/Telegram-@ant_gn-26A5E4?style=flat-square&logo=telegram)](https://t.me/ant_gn)  
-[![Email](https://img.shields.io/badge/Email-info@galanin--nn.ru-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:info@galanin-nn.ru)
